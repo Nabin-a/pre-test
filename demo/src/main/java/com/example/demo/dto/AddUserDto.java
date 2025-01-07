@@ -1,6 +1,8 @@
 package com.example.demo.dto;
 
 
+import java.sql.Date;
+
 import com.example.demo.entities.Roles;
 import com.example.demo.validation.Role;
 
@@ -20,9 +22,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddUserDto {
+    private String firstName;
+    private String lastName;
     @NotBlank
     @Column(unique = true)
-    private String username;
+    private String userName;
 
     @NotBlank
     @Column(unique = true)
@@ -35,4 +39,5 @@ public class AddUserDto {
     @Enumerated(value = EnumType.STRING)
     @Role(enumClass = Roles.class)
     private String role;
+    private Date dateOfBirth;
 }
