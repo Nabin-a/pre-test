@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,13 +48,25 @@ public class UserService {
     }
 
     // Method Edit User.
-    public UserInfoDto editUser( int id, Map<Object, Object> fields) {
+    public UserInfoDto editUser(int id, Map<Object, Object> fields) {
         Optional<Users> user = userRepo.findById(id);
         if (user.isPresent()) {
             fields.forEach((key, value) -> {
-                Field field = ReflectionUtils.findField(Users.class,(String) key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, user.get(), value);
+                Field field = ReflectionUtils.findField(Users.class, (String) key);
+                if (field != null) {
+                    field.setAccessible(true);
+                    try {
+                        if (field.getType() == java.sql.Date.class && value instanceof String) {
+                            java.sql.Date dateValue = java.sql.Date.valueOf((String) value);
+                            ReflectionUtils.setField(field, user.get(), dateValue);
+                        } else {
+                            ReflectionUtils.setField(field, user.get(), value);
+                        }
+                    } catch (IllegalArgumentException e) {
+                        // Handle the exception (e.g., log it, rethrow it, etc.)
+                        e.printStackTrace();
+                    }
+                }
             });
             return modelMapper.map(userRepo.saveAndFlush(user.get()), UserInfoDto.class);
         }
