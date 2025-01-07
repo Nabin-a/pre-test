@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AddUserDto;
 import com.example.demo.dto.UserDto;
+import com.example.demo.entities.Users;
 import com.example.demo.service.UserService;
 
 import java.util.List;
@@ -33,8 +34,7 @@ public class UserController {
 
 
     @PostMapping("/add-user")
-    public UserDto create(@Validated @RequestBody AddUserDto newUser) {
-        
+    public Users create(@Validated @RequestBody AddUserDto newUser) {
         return userService.create(newUser);
     }
     
