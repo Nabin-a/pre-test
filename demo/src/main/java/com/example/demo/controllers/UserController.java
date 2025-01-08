@@ -55,13 +55,13 @@ public class UserController {
     }
 
     //PATCH Method: Edit some of field user by id
-    @PatchMapping("/{id}")
+    @PatchMapping("/detail/{id}")
     public UserInfoDto edit(@PathVariable int id, @Valid @RequestBody Map<Object, Object> fields){
         return userService.editUser(id, fields);
     }
     
     //DELETE Method: Remove user by id
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/detail/{id}")
     public void removeUser(@PathVariable Integer id) {
         userService.removeUser(id);
     }

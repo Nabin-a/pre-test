@@ -26,7 +26,7 @@ defineProps({
       <tbody v-for="(user, index) in userList" :key="index">
         <tr>
           <td>{{ user.userName }}</td>
-          <td>{{ user.firstName ? user.firstName : "-"}}</td>
+          <td>{{ user.firstName ? user.firstName : "-" }}</td>
           <td>{{ user.lastName ? user.lastName : "-" }}</td>
           <td>
             <button @click="$emit('getUserId', user.id)">Details</button>

@@ -34,6 +34,18 @@ const getUserId = async (id) => {
     console.error("User Not Found ", error);
   }
 };
+
+const editUser = async(id, firstName, lastName, email, role, dateOfBirth) =>{
+    console.log(id);
+    try {
+        const res = await axios.patch(`http://localhost:8082/api/user/detail/{id}`,{
+            method: "PATCH"
+        })
+        
+    } catch (error) {
+        
+    }
+};
 </script>
 <template>
   <UserList :userList="users" @getUserId="getUserId" />

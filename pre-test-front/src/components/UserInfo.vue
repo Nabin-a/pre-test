@@ -13,7 +13,7 @@ defineProps({
       <div class="modal-body bgsb">
         <u class="list-group">
           <li class="list-group-item list-group-item-light">
-            First Name : {{ userInfo.firstName ? userInfo.firstName : "-"}}
+            First Name : {{ userInfo.firstName ? userInfo.firstName : "-" }}
           </li>
           <li class="list-group-item list-group-item-light">
             Last Name : {{ userInfo.lastName ? userInfo.lastName : "-" }}
