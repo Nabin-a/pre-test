@@ -34,6 +34,13 @@ public class UserService {
         return mapList(userList, UserDto.class, modelMapper);
     }
 
+    public UserInfoDto getUserById(Integer id) {
+        Users users = userRepo.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User ID " + id + " Does not exist"));
+        return modelMapper.map(users, UserInfoDto.class);
+    }
+
     // Method Add User.
     public Users create(AddUserDto newUser) {
         // If user not input role -> Default set role to user.
@@ -76,7 +83,8 @@ public class UserService {
     // Method Remove User.
     public void removeUser(int id) {
         userRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, id + "Does not exist"));
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User ID " + id + " Does not exist"));
 
         userRepo.deleteById(id);
     }

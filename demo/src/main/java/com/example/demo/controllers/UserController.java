@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/user")
 public class UserController {
@@ -37,6 +39,13 @@ public class UserController {
     public List<UserDto> listAllUser() {
         return userService.getAllUser();
     }
+
+    // GET {id} Method: Display details of user.
+    @GetMapping("/detail/{id}")
+    public UserInfoDto detail(@PathVariable int id) {
+        return userService.getUserById(id);
+    }
+    
 
     //POST Method: Create new user
     @PostMapping("/add-user")
