@@ -1,6 +1,4 @@
 <script setup>
-import { ref } from "vue";
-import UserInfo from "./UserInfo.vue";
 defineEmits(["getUserId", "removeUser"]);
 defineProps({
   userList: {
@@ -8,30 +6,19 @@ defineProps({
     require: true,
   },
 });
-
-const showModal = ref(false);
-const selectedUser = ref(null);
-
-const openModal = (user) => {
-  selectedUser.value = user;
-  showModal.value = true;
-};
-
-const closeModal = () => {
-  showModal.value = false;
-};
 </script>
 <template>
-  <div class="container fluid">
+  <div class="container">
     <div class="card">
       <div class="text-muted card-header">
         <h2>User List</h2>
+        <button type="button" class="btn btn-success">Add</button>
       </div>
       <div class="card-body" v-if="userList.length < 1">
         <h4>Loading users...</h4>
       </div>
       <div class="card-body">
-        <table class="table table-hover">
+        <table class="table table-sm table-hover">
           <thead class="thead-dark">
             <tr>
               <th>Account</th>
@@ -50,7 +37,7 @@ const closeModal = () => {
                   type="button"
                   class="btn btn-info"
                   data-bs-toggle="modal"
-                  data-target="#detailModal"
+                  data-bs-target="#Modal"
                   @click="$emit('getUserId', user.id)"
                 >
                   <svg
@@ -95,11 +82,5 @@ const closeModal = () => {
       </div>
     </div>
   </div>
-  <UserInfo
-    v-if="showModal"
-    :userInfo="selectedUser"
-    @editUser="closeModal"
-    @close="closeModal"
-  />
 </template>
 <style></style>

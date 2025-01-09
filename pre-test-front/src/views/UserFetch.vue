@@ -1,11 +1,13 @@
 <script setup>
 import UserList from "../components/UserList.vue";
 import UserInfo from "../components/UserInfo.vue";
+import UserForm from "../components/UserForm.vue";
 import axios from "axios";
 import { onBeforeMount, ref } from "vue";
 
 const users = ref([]);
 const userInfo = ref({});
+const isEditing = ref(false);
 onBeforeMount(async () => {
   await getUsers();
 });
@@ -52,12 +54,14 @@ const editUser = async (id, firstName, lastName, email, role, dateOfBirth) => {
       email: email,
       role: role,
       dateOfBirth: dateOfBirth,
-    }.then((res) => {
-      console.log(res.data);
-    }).catch((err) =>{
-      console.error("User can not edit: ", err);
-      
-    })
+    }
+      .then((res) => {
+        console.log(res.data);
+        getUsers();
+      })
+      .catch((err) => {
+        console.error("User can not edit: ", err);
+      })
   );
 };
 
@@ -71,14 +75,25 @@ const removeUser = async (id) => {
       .then((res) => {
         console.log("Delete success.");
         getUsers();
-      }).catch((err) =>{
+      })
+      .catch((err) => {
         console.error("User can not remove: ", err);
       });
   }
+};
+
+const closeForm = () => {
+  isEditing.value = false;
 };
 </script>
 <template>
   <UserList :userList="users" @getUserId="getUserId" @removeUser="removeUser" />
   <UserInfo :userInfo="userInfo" />
+  <UserForm
+    :userId="userInfo.id"
+    :isEditing="isEditing"
+    @editUser="editUser"
+    @closeForm="closeForm"
+  />
 </template>
 <style></style>

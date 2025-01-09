@@ -5,7 +5,7 @@ const props = defineProps({
     type: Object,
   },
 });
-const emit = defineEmits(['editUser', 'close']);
+const emit = defineEmits(["editUser"]);
 const editUser = () => {
   emit("editUser", props.userInfo.id);
 };
@@ -14,42 +14,44 @@ const editUser = () => {
   <div>
     <div
       class="modal fade"
-      id="detailModal"
+      id="Modal"
       tabindex="-1"
-      aria-labelledby="detailModalLabel"
+      aria-labelledby="ModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <h5 class="modal-title" id="detailModalLabel">User Detail</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <div class="modal-body bgsb">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ModalLabel">User Detail</h5>
+            <button
+              type="button"
+              class="close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
             <ul class="list-group">
-              <li class="list-group-item list-group-item-light">
+              <li class="text-dark list-group-item list-group-item-light">
                 First Name : {{ userInfo.firstName ? userInfo.firstName : "-" }}
               </li>
-              <li class="list-group-item list-group-item-light">
+              <li class="text-dark list-group-item list-group-item-light">
                 Last Name : {{ userInfo.lastName ? userInfo.lastName : "-" }}
               </li>
-              <li class="list-group-item list-group-item-light">
+              <li class="text-dark list-group-item list-group-item-light">
                 Email : {{ userInfo.email }}
               </li>
-              <li class="list-group-item list-group-item-light">
+              <li class="text-dark list-group-item list-group-item-light">
                 Role : {{ userInfo.role }}
               </li>
-              <li class="list-group-item list-group-item-light">
+              <li class="text-dark list-group-item list-group-item-light">
                 Date of Birth : {{ moment(userInfo.dateOfBirth).format("MMM Do YYYY") }}
               </li>
             </ul>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" @click="editUser">
-                Edit
-              </button>
-              <button type="button" class="btn btn-secondary" @click="$emit('close')">
-                Close
-              </button>
+              <button type="button" class="btn btn-warning" @click="editUser">Edit</button>
             </div>
           </div>
         </div>
@@ -59,7 +61,7 @@ const editUser = () => {
 </template>
 <style>
 .modal-header {
-  background-color: #ff6666;
+  background-color: #66fcff;
   color: rgb(36, 33, 33);
 }
 
