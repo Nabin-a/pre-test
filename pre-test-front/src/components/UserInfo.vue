@@ -23,12 +23,7 @@ const editUser = () => {
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="ModalLabel">User Detail</h5>
-            <button
-              type="button"
-              class="close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -51,7 +46,9 @@ const editUser = () => {
               </li>
             </ul>
             <div class="modal-footer">
-              <button type="button" class="btn btn-warning" @click="editUser">Edit</button>
+              <button type="button" class="btn btn-warning" @click="editUser">
+                Edit
+              </button>
             </div>
           </div>
         </div>
