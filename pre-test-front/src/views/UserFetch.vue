@@ -11,40 +11,51 @@ onBeforeMount(async () => {
 });
 
 const getUsers = async () => {
-  try {
-    const res = await axios.get(`http://localhost:8082/api/user/list`, {
+  await axios
+    .get(`http://localhost:8082/api/user/list`, {
       method: "GET",
+    })
+    .then((res) => {
+      console.log(res.data);
+      users.value = res.data;
+    })
+    .catch((err) => {
+      console.error("Can not fetch users data: ", err);
     });
-    users.value = res.data;
-    console.log(users.value);
-  } catch (error) {
-    console.error("Can not fetch data:", error);
-  }
 };
 
 const getUserId = async (id) => {
   console.log(id);
-  try {
-    const res = await axios.get(`http://localhost:8082/api/user/detail/${id}`, {
+  await axios
+    .get(`http://localhost:8082/api/user/detail/${id}`, {
       method: "GET",
+    })
+    .then((res) => {
+      console.log(res.data);
+      userInfo.value = res.data;
+    })
+    .catch((err) => {
+      console.error("User not found: ", err);
     });
-    userInfo.value = res.data;
-    console.log(userInfo.value);
-  } catch (error) {
-    console.error("User Not Found ", error);
-  }
 };
 
-const editUser = async(id, firstName, lastName, email, role, dateOfBirth) =>{
-    console.log(id);
-    try {
-        const res = await axios.patch(`http://localhost:8082/api/user/detail/{id}`,{
-            method: "PATCH"
-        })
-        
-    } catch (error) {
-        
-    }
+const editUser = async (id, firstName, lastName, email, role, dateOfBirth) => {
+  console.log(id);
+  await axios.patch(
+    `http://localhost:8082/api/user/detail/{id}`,
+    {
+      method: "PATCH",
+    },
+    {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      role: role,
+      dateOfBirth: dateOfBirth,
+    }.then((res) => {
+      console.log(res.data);
+    })
+  );
 };
 </script>
 <template>
