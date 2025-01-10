@@ -1,81 +1,86 @@
 <script setup>
 import { ref, defineProps, watch } from "vue";
+const emit = defineEmits(["addUser", "closeForm"]);
 const props = defineProps({
-  userId: {
-    type: Number,
-    require: true,
-  },
-  userInfo: {
+  userCreate: {
     type: Object,
     require: true,
   },
-  isEditing:{
-    type: Boolean,
-    default: false
-  }
 });
-const firstName = ref("");
-const lastName = ref("");
-const email = ref("");
-const role = ref("");
-const dateOfBirth = ref("");
+
+const newUser = ref({});
+const roles = ref(["admin", "user"]);
+const roleSelect = ref("");
 
 watch(
-  () => props.userInfo,
-  (newUserInfo) => {
-    if (newUserInfo && Object.keys(newUserInfo).length) {
-      firstName.value = newUserInfo.firstName || "";
-      lastName.value = newUserInfo.lastName || "";
-      email.value = newUserInfo.email || "";
-      role.value = newUserInfo.role || "";
-      dateOfBirth.value = newUserInfo.dateOfBirth || "";
-    }
+  () => props.userCreate,
+  (newValue) => {
+    newUser.value = {
+      firstName: newValue.firstName,
+      lastName: newValue.lastName,
+      userName: newValue.userName,
+      email: newValue.email,
+      password: newValue.password,
+      con_password: newValue.con_password,
+    };
   }
 );
-
-const submitForm = () => {
-  this.$emit(
-    "editUser",
-    props.userId,
-    firstName.value,
-    lastName.value,
-    email.value,
-    role.value,
-    dateOfBirth.value
-  );
-};
-
-const closeForm = () => {
-  this.$emit("closeForm");
-};
 </script>
 <template>
   <div>
-    <h2>Edit</h2>
-    <form @submit.prevent="submitForm">
+    <h2>Add new user.</h2>
       <div>
-        <label for="firstName">First Name: </label>
-        <input id="firstName" type="text" v-model="firstName" required />
+        <label>First Name: </label>
+        <input type="text" v-model="newUser.firstName" required />
       </div>
       <div>
-        <label for="lastName">Last Name: </label>
-        <input id="lastName" v-model="lastName" required />
+        <label>Last Name: </label>
+        <input type="text" v-model="newUser.lastName" required />
       </div>
       <div>
-        <label for="email">Email: </label>
-        <input id="email" type="email" v-model="email" required />
+        <label>User name:</label>
+        <input type="text" v-model="newUser.userName" required />
       </div>
       <div>
-        <label for="role">Role: </label>
-        <input id="role" text v-model="role" required />
+        <label>Email: </label>
+        <input type="email" v-model="newUser.email" required />
       </div>
       <div>
-        <label for="dateOfBirth">Date of Birth:</label>
-        <input id="dateOfBirth" type="date" v-model="dateOfBirth" required />
+        <label>Password: </label>
+        <input type="password" v-model="newUser.password" required />
       </div>
-      <button type="submit">Save</button>
-      <button type="button" @click="closeForm">Cancel</button>
-    </form>
+      <div>
+        <label>Confirm Password: </label>
+        <input type="password" v-model="newUser.con_password" required />
+      </div>
+      <div>
+        <label>Role: </label>
+        <select :roleSelect>
+          <option v-for="role in roles" :value="role">{{ role }}</option>
+        </select>
+      </div>
+      <div>
+        <label>Date of Birth:</label>
+        <input type="date" v-model="newUser.dateOfBirth" required />
+      </div>
+      <button
+        type="submit"
+        @click="
+          $emit(
+            'addUser',
+            newUser.firstName,
+            newUser.lastName,
+            newUser.userName,
+            newUser.email,
+            newUser.password,
+            newUser.con_password,
+            roleSelect
+          )
+        "
+      >
+        Save
+      </button>
+      <router-link to="/"><button type="button">Cancel</button></router-link>
   </div>
 </template>
 <style></style>

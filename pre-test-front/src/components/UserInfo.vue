@@ -23,7 +23,12 @@ const editUser = () => {
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="ModalLabel">User Detail</h5>
-            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -42,7 +47,12 @@ const editUser = () => {
                 Role : {{ userInfo.role }}
               </li>
               <li class="text-dark list-group-item list-group-item-light">
-                Date of Birth : {{ moment(userInfo.dateOfBirth).format("MMM Do YYYY") }}
+                Date of Birth :
+                {{
+                  moment(userInfo.dateOfBirth).format("MMM Do YYYY")
+                    ? userInfo.dateOfBirth
+                    : "-"
+                }}
               </li>
             </ul>
             <div class="modal-footer">

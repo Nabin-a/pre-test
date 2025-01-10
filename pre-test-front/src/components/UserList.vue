@@ -12,10 +12,12 @@ defineProps({
     <div class="card">
       <div class="text-muted card-header">
         <h2>User List</h2>
+        <router-link to="/user/form">
         <button type="button" class="btn btn-success">Add</button>
+        </router-link>
       </div>
       <div class="card-body" v-if="userList.length < 1">
-        <h4>Loading users...</h4>
+        <h4 class="text-body-secondary">Loading users...</h4>
       </div>
       <div class="card-body">
         <table class="table table-sm table-hover">
