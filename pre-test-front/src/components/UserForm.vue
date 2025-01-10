@@ -1,86 +1,48 @@
 <script setup>
-import { ref, defineProps, watch } from "vue";
-const emit = defineEmits(["addUser", "closeForm"]);
-const props = defineProps({
-  userCreate: {
-    type: Object,
-    require: true,
-  },
-});
+import { ref } from "vue";
+const emit = defineEmits(["createUser"]);
 
-const newUser = ref({});
-const roles = ref(["admin", "user"]);
-const roleSelect = ref("");
+const email = ref("");
+const password = ref("");
 
-watch(
-  () => props.userCreate,
-  (newValue) => {
-    newUser.value = {
-      firstName: newValue.firstName,
-      lastName: newValue.lastName,
-      userName: newValue.userName,
-      email: newValue.email,
-      password: newValue.password,
-      con_password: newValue.con_password,
-    };
-  }
-);
+const submitForm = () => {
+  // Emit the createUser event with user data
+  emit("createUser", { email: email.value, password: password.value });
+};
 </script>
 <template>
   <div>
-    <h2>Add new user.</h2>
-      <div>
-        <label>First Name: </label>
-        <input type="text" v-model="newUser.firstName" required />
-      </div>
-      <div>
-        <label>Last Name: </label>
-        <input type="text" v-model="newUser.lastName" required />
-      </div>
-      <div>
-        <label>User name:</label>
-        <input type="text" v-model="newUser.userName" required />
-      </div>
-      <div>
-        <label>Email: </label>
-        <input type="email" v-model="newUser.email" required />
-      </div>
-      <div>
-        <label>Password: </label>
-        <input type="password" v-model="newUser.password" required />
-      </div>
-      <div>
-        <label>Confirm Password: </label>
-        <input type="password" v-model="newUser.con_password" required />
-      </div>
-      <div>
-        <label>Role: </label>
-        <select :roleSelect>
-          <option v-for="role in roles" :value="role">{{ role }}</option>
-        </select>
-      </div>
-      <div>
-        <label>Date of Birth:</label>
-        <input type="date" v-model="newUser.dateOfBirth" required />
-      </div>
-      <button
-        type="submit"
-        @click="
-          $emit(
-            'addUser',
-            newUser.firstName,
-            newUser.lastName,
-            newUser.userName,
-            newUser.email,
-            newUser.password,
-            newUser.con_password,
-            roleSelect
-          )
-        "
-      >
-        Save
-      </button>
-      <router-link to="/"><button type="button">Cancel</button></router-link>
+    <h2>Insert user</h2>
   </div>
+  <form>
+    <div class="form-group row">
+      <label for="email">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        aria-describedby="emailHelp"
+        placeholder="example@mail.com"
+        v-model="email"
+      />
+    </div>
+    <div class="form-group row">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="Password"
+        v-model="password"
+      />
+    </div>
+    <div>
+      <button type="button" class="btn btn-primary" @click="submitForm">Submit</button>
+      &nbsp
+      <router-link to="/">
+        <button type="submit" class="btn btn-primary">Cancel</button>
+      </router-link>
+    </div>
+  </form>
 </template>
 <style></style>

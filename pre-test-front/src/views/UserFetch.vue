@@ -25,7 +25,7 @@ const getUsers = async () => {
 };
 
 const getUserId = async (id) => {
-  console.log(id);
+  console.log("Get the user detail:" + id);
   await axios
     .get(`http://localhost:8082/api/user/detail/${id}`, {
       method: "GET",
@@ -58,7 +58,7 @@ const removeUser = async (id) => {
 
 </script>
 <template>
-  <UserList :userList="users" @getUserId="getUserId" @removeUser="removeUser" />
+  <UserList :userList="users" @getUserId="getUserId" @removeUser="removeUser"/>
   <UserInfo :userInfo="userInfo" />
 </template>
 <style></style>

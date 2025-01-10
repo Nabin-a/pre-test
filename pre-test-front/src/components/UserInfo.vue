@@ -5,10 +5,6 @@ const props = defineProps({
     type: Object,
   },
 });
-const emit = defineEmits(["editUser"]);
-const editUser = () => {
-  emit("editUser", props.userInfo.id);
-};
 </script>
 <template>
   <div>
@@ -56,7 +52,7 @@ const editUser = () => {
               </li>
             </ul>
             <div class="modal-footer">
-              <button type="button" class="btn btn-warning" @click="editUser">
+              <button type="button" class="btn btn-warning">
                 Edit
               </button>
             </div>

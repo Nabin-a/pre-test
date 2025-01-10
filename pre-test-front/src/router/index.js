@@ -14,7 +14,7 @@ const router = createRouter({
       path:"/user/form",
       name: "Form",
       component: UserForm
-    }
+    },
   ],
 })
 
