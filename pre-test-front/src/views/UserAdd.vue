@@ -18,15 +18,19 @@ const dateOfBirth = ref("");
 
 const unique = ref(false);
 
+//Function insert user data.
 const createUser = async () => {
   console.log("Form: create new user");
+
+  //Password check mathing
   if (password.value !== confirmPassword.value) {
-    alert("Password not match")
-    password.value = ""
-    confirmPassword.value = ""
-    return
+    alert("Password not match");
+    password.value = "";
+    confirmPassword.value = "";
+    return;
   }
 
+  //If password match, it'll create new user
   try {
     const res = await axios.post(`http://localhost:8082/api/user/add-user`, {
       firstName: firstName.value,
@@ -51,6 +55,7 @@ const createUser = async () => {
   }
 };
 
+//User watch() to perform an action in response to a specific change in reactive data.
 watch(
   [firstName, lastName, userName, email, password, roleSelect, dateOfBirth],
   async () => {
@@ -97,28 +102,25 @@ watch(
       </div>
     </div>
     <div class="form-group row">
-      <label>User name</label>
       <input
         type="text"
         class="form-control"
-        placeholder="username"
+        placeholder="User name"
         v-model="userName"
         required
       />
     </div>
     <div class="form-group row">
-      <label>Email address</label>
       <input
         type="email"
         class="form-control"
         aria-describedby="emailHelp"
-        placeholder="example@mail.com"
+        placeholder="Email: example@mail.com"
         v-model="email"
         required
       />
     </div>
     <div class="form-group row">
-      <label>Password</label>
       <input
         type="password"
         class="form-control"
@@ -128,21 +130,24 @@ watch(
       />
     </div>
     <div class="form-group row">
-      <label>Confirm Password</label>
       <input
         type="password"
         class="form-control"
-        placeholder="Password"
+        placeholder="Confirm Password"
         v-model="confirmPassword"
       />
     </div>
     <div class="form-group row">
-      <label>Role</label>
-      <select class="form-control" v-model="roleSelect">
-        <option v-for="role in roles" :key="role" :value="role">
-          {{ role }}
-        </option>
-      </select>
+      <div class="col-auto">
+        <label class="col-form-label">Role</label>
+      </div>
+      <div class="col-auto">
+        <select class="form-control" v-model="roleSelect">
+          <option aria-placeholder="Role" v-for="role in roles" :key="role" :value="role">
+            {{ role }}
+          </option>
+        </select>
+      </div>
     </div>
     <div class="form-group row">
       <label>Date of Birth</label>

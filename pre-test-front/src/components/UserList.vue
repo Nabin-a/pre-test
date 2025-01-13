@@ -13,7 +13,7 @@ defineProps({
       <div class="text-muted card-header">
         <h2>User List</h2>
         <router-link to="/create">
-        <button type="button" class="btn btn-success">Add</button>
+          <button type="button" class="btn btn-success">Add</button>
         </router-link>
       </div>
       <div class="card-body" v-if="userList.length < 1">
@@ -58,6 +58,10 @@ defineProps({
                     />
                   </svg>
                 </button>
+                &nbsp
+                <router-link :to="`/edit/${user.id}`">
+                  <button>Edit</button>
+                </router-link>
                 &nbsp
                 <button
                   type="button"

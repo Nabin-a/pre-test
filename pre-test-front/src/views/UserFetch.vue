@@ -10,6 +10,7 @@ onBeforeMount(async () => {
   await getUsers();
 });
 
+//Function list all users.
 const getUsers = async () => {
   await axios
     .get(`http://localhost:8082/api/user/list`, {
@@ -24,6 +25,7 @@ const getUsers = async () => {
     });
 };
 
+//Function display user details.
 const getUserId = async (id) => {
   console.log("Get the user detail:" + id);
   await axios
@@ -39,6 +41,7 @@ const getUserId = async (id) => {
     });
 };
 
+//Function remove user by user id.
 const removeUser = async (id) => {
   if (confirm("Confirm to remove this user?") == true) {
     console.log(id);
@@ -59,6 +62,6 @@ const removeUser = async (id) => {
 </script>
 <template>
   <UserList :userList="users" @getUserId="getUserId" @removeUser="removeUser"/>
-  <UserInfo :userInfo="userInfo" />
+  <UserInfo :userInfo="userInfo" @editUserDetail="editUserId"/>
 </template>
 <style></style>

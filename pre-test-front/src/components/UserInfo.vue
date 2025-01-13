@@ -51,15 +51,17 @@ const props = defineProps({
                 }}
               </li>
             </ul>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-warning">
-                Edit
+            <div class="modal-footer" data-bs-dismiss="modal" aria-label="Close">
+              <button type="button" class="btn btn-secondary" aria-hidden="true">
+                Close
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div></div>
   </div>
 </template>
 <style>
