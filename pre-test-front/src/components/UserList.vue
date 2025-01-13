@@ -12,7 +12,7 @@ defineProps({
     <div class="card">
       <div class="text-muted card-header">
         <h2>User List</h2>
-        <router-link to="/user/form">
+        <router-link to="/create">
         <button type="button" class="btn btn-success">Add</button>
         </router-link>
       </div>

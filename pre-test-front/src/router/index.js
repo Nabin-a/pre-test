@@ -1,4 +1,4 @@
-import UserForm from '../components/UserForm.vue'
+import UserAdd from '../views/UserAdd.vue'
 import UserFetch from '../views/UserFetch.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -11,9 +11,9 @@ const router = createRouter({
       component: UserFetch
     },
     {
-      path:"/user/form",
-      name: "Form",
-      component: UserForm
+      path:"/create",
+      name: "Create",
+      component: UserAdd
     },
   ],
 })
