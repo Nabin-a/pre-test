@@ -4,3 +4,4 @@ INSERT INTO user (firstname, lastname, username, email, `password`, `role`, date
 ('Michael', 'Brown', 'michaelbrown', 'michael.brown@example.com', 'hashed_password_3', 'user', '1992-07-20'),
 ('Emily', 'Johnson', 'emilyjohnson', 'emily.johnson@example.com', 'hashed_password_4', 'user', '1988-11-30'),
 ('David', 'Wilson', 'davidwilson', 'david.wilson@example.com', 'hashed_password_5', 'user', '1995-03-10');
+

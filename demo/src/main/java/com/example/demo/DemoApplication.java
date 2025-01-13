@@ -10,7 +10,7 @@ public class DemoApplication {
 
 	public static void main(String[] args) {
 		Dotenv dotenv = Dotenv.configure()
-				.directory("Pre-test/demo/.env") 
+				.directory("demo\\.env") 
 				.load();
 
 		System.setProperty("MYSQL_DATABASE_HOST", dotenv.get("MYSQL_DATABASE_HOST"));
