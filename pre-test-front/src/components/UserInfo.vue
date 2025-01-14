@@ -52,7 +52,7 @@ const props = defineProps({
               </li>
             </ul>
             <div class="modal-footer" data-bs-dismiss="modal" aria-label="Close">
-              <button type="button" class="btn btn-secondary" aria-hidden="true">
+              <button type="button" class="btn btn-secondary">
                 Close
               </button>
             </div>

@@ -84,7 +84,7 @@ watch(
   </div>
   <form @submit.prevent="createUser">
     <div class="form-group row">
-      <div class="col">
+      <div class="col-sm-5">
         <input
           type="text"
           class="form-control"
@@ -92,7 +92,9 @@ watch(
           v-model="firstName"
         />
       </div>
-      <div class="col">
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-5">
         <input
           type="text"
           class="form-control"
@@ -102,46 +104,52 @@ watch(
       </div>
     </div>
     <div class="form-group row">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="User name"
-        v-model="userName"
-        required
-      />
-    </div>
-    <div class="form-group row">
-      <input
-        type="email"
-        class="form-control"
-        aria-describedby="emailHelp"
-        placeholder="Email: example@mail.com"
-        v-model="email"
-        required
-      />
-    </div>
-    <div class="form-group row">
-      <input
-        type="password"
-        class="form-control"
-        placeholder="Password"
-        v-model="password"
-        required
-      />
-    </div>
-    <div class="form-group row">
-      <input
-        type="password"
-        class="form-control"
-        placeholder="Confirm Password"
-        v-model="confirmPassword"
-      />
-    </div>
-    <div class="form-group row">
-      <div class="col-auto">
-        <label class="col-form-label">Role</label>
+      <div class="col-sm-5">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="User name"
+          v-model="userName"
+          required
+        />
       </div>
-      <div class="col-auto">
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-5">
+        <input
+          type="email"
+          class="form-control"
+          aria-describedby="emailHelp"
+          placeholder="Email: example@mail.com"
+          v-model="email"
+          required
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-5">
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Password"
+          v-model="password"
+          required
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-5">
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Confirm Password"
+          v-model="confirmPassword"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-auto col-form-label">Role</label>
+      <div class="col-sm-2">
         <select class="form-control" v-model="roleSelect">
           <option aria-placeholder="Role" v-for="role in roles" :key="role" :value="role">
             {{ role }}
@@ -150,20 +158,24 @@ watch(
       </div>
     </div>
     <div class="form-group row">
-      <label>Date of Birth</label>
-      <input
-        type="date"
-        class="form-control"
-        placeholder="Select date of birth"
-        v-model="dateOfBirth"
-      />
+      <div class="col-sm-auto col-form-label">
+        <label>Date of Birth</label>
+      </div>
+      <div class="col-sm-auto">
+        <input
+          type="date"
+          class="form-control"
+          placeholder="Select date of birth"
+          v-model="dateOfBirth"
+        />
+      </div>
     </div>
     <div>
       <br />
       <button type="submit" class="btn btn-primary">Submit</button>
       &nbsp
       <router-link to="/">
-        <button type="submit" class="btn btn-primary">Cancel</button>
+        <button type="submit" class="btn btn-secondary">Cancel</button>
       </router-link>
     </div>
   </form>

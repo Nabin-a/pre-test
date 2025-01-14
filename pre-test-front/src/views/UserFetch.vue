@@ -13,11 +13,9 @@ onBeforeMount(async () => {
 //Function list all users.
 const getUsers = async () => {
   await axios
-    .get(`http://localhost:8082/api/user/list`, {
-      method: "GET",
-    })
+    .get(`http://localhost:8082/api/user/list`)
     .then((res) => {
-      console.log(res.data.data);
+      console.log(res.data);
       users.value = res.data;
     })
     .catch((err) => {
@@ -29,9 +27,7 @@ const getUsers = async () => {
 const getUserId = async (id) => {
   console.log("Get the user detail:" + id);
   await axios
-    .get(`http://localhost:8082/api/user/detail/${id}`, {
-      method: "GET",
-    })
+    .get(`http://localhost:8082/api/user/detail/${id}`)
     .then((res) => {
       console.log(res.data);
       userInfo.value = res.data;
@@ -46,9 +42,7 @@ const removeUser = async (id) => {
   if (confirm("Confirm to remove this user?") == true) {
     console.log(id);
     await axios
-      .delete(`http://localhost:8082/api/user/detail/${id}`, {
-        method: "DELETE",
-      })
+      .delete(`http://localhost:8082/api/user/detail/${id}`)
       .then((res) => {
         console.log("Delete success.");
         getUsers();
@@ -58,10 +52,9 @@ const removeUser = async (id) => {
       });
   }
 };
-
 </script>
 <template>
-  <UserList :userList="users" @getUserId="getUserId" @removeUser="removeUser"/>
-  <UserInfo :userInfo="userInfo" @editUserDetail="editUserId"/>
+  <UserList :userList="users" @getUserId="getUserId" @removeUser="removeUser" />
+  <UserInfo :userInfo="userInfo" />
 </template>
 <style></style>
