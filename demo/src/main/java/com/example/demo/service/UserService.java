@@ -9,6 +9,10 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,12 +21,16 @@ import com.example.demo.dto.AddUserDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserInfoDto;
 import com.example.demo.entities.Roles;
+import com.example.demo.entities.UserPrincipal;
 import com.example.demo.entities.Users;
 import com.example.demo.repositories.UserRepository;
 
 @Service
 
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    // @Autowired
+    // private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepo;
     @Autowired
@@ -44,11 +52,14 @@ public class UserService {
     // Method Add User.
     public Users create(AddUserDto newUser) {
         // If user not input role -> Default set role to user.
-        if (newUser.getRole() == null) {
-            newUser.setRole(String.valueOf(Roles.user));
+        Users user = modelMapper.map(newUser, Users.class);
+        if (newUser.getRole() != null) {
+            user.setRole(Roles.valueOf(newUser.getRole().toLowerCase()));
+        }else{
+            user.setRole(Roles.user);
         }
 
-        Users user = modelMapper.map(newUser, Users.class);
+        user.setPassword(newUser.getPassword());
         Users saveUser = userRepo.saveAndFlush(user);
         saveUser.setPassword("**********");
         return saveUser;
@@ -92,5 +103,15 @@ public class UserService {
     // Map list method
     public <S, T> List<T> mapList(List<S> source, Class<T> targetClass, ModelMapper modelMapper) {
         return source.stream().map(entity -> modelMapper.map(entity, targetClass)).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Users user = userRepo.findByUserName(userName);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return new UserPrincipal(user);
     }
 }

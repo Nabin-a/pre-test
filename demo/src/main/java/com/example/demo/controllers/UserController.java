@@ -65,4 +65,12 @@ public class UserController {
     public void removeUser(@PathVariable Integer id) {
         userService.removeUser(id);
     }
+
+    @PostMapping("/login")
+    public String postMethodName(@RequestBody String entity) {
+        //TODO: process POST request
+        
+        return entity;
+    }
+    
 }
