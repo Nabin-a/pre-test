@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AddUserDto;
+import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserInfoDto;
 import com.example.demo.entities.Users;
@@ -67,10 +68,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String postMethodName(@RequestBody String entity) {
-        //TODO: process POST request
-        
-        return entity;
+    public String login(@RequestBody LoginDto login) {        
+        return userService.verify(login);
     }
     
 }

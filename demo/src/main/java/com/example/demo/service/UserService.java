@@ -9,15 +9,21 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.AddUserDto;
+import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserInfoDto;
 import com.example.demo.entities.Roles;
@@ -28,13 +34,17 @@ import com.example.demo.repositories.UserRepository;
 @Service
 
 public class UserService implements UserDetailsService {
-
-    // @Autowired
-    // private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepo;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private JwtService jwtService;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    @Autowired
+    AuthenticationManager authManager;
 
     // Method List All Users.
     public List<UserDto> getAllUser() {
@@ -55,11 +65,11 @@ public class UserService implements UserDetailsService {
         Users user = modelMapper.map(newUser, Users.class);
         if (newUser.getRole() != null) {
             user.setRole(Roles.valueOf(newUser.getRole().toLowerCase()));
-        }else{
+        } else {
             user.setRole(Roles.user);
         }
 
-        user.setPassword(newUser.getPassword());
+        user.setPassword(encoder.encode(newUser.getPassword()));
         Users saveUser = userRepo.saveAndFlush(user);
         saveUser.setPassword("**********");
         return saveUser;
@@ -113,5 +123,18 @@ public class UserService implements UserDetailsService {
         }
 
         return new UserPrincipal(user);
+    }
+
+    //Method login
+    public String verify(LoginDto login) {
+        Users user = modelMapper.map(login, Users.class);
+        Authentication auth = authManager
+                .authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
+
+        final UserDetails userDetails = loadUserByUsername(login.getUserName());
+        if (auth.isAuthenticated())
+            return jwtService.generateToken(userDetails);
+            
+        return "fail";
     }
 }
