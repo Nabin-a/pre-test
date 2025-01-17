@@ -2,6 +2,7 @@ import UserAdd from "../views/UserAdd.vue";
 import UserFetch from "../views/UserFetch.vue";
 import UserEdit from "../views/UserEdit.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import UserLogin from "../views/UserLogin.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,11 @@ const router = createRouter({
       name: "Edit",
       component: UserEdit,
     },
+    {
+      path: "/login",
+      name: "Login",
+      component: UserLogin
+    }
   ],
 });
 

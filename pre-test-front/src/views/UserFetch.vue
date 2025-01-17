@@ -6,6 +6,7 @@ import { onBeforeMount, ref } from "vue";
 
 const users = ref([]);
 const userInfo = ref({});
+
 onBeforeMount(async () => {
   await getUsers();
 });
