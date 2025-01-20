@@ -77,22 +77,12 @@ const removeUser = async (id) => {
   }
 };
 
-const userLogout = async () => {
-  await Swal.fire({
-    title: "Warning!",
-    text: "You have been logged out.",
-    icon: "warning",
-    confirmButtonText: "Okay",
-  });
-  localStorage.removeItem("token");
-};
 </script>
 <template>
   <UserList
     :userList="users"
     @getUserId="getUserId"
     @removeUser="removeUser"
-    @userLogut="userLogout"
   />
   <UserInfo :userInfo="userInfo" />
 </template>

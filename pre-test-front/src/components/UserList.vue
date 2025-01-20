@@ -17,7 +17,7 @@ const userLogout = async () => {
     confirmButtonText: "Okay",
   });
   localStorage.removeItem("token");
-  location.reload();
+  // location.reload();
 };
 </script>
 <template>
