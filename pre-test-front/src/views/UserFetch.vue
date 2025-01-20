@@ -3,6 +3,7 @@ import UserList from "../components/UserList.vue";
 import UserInfo from "../components/UserInfo.vue";
 import axios from "axios";
 import { onBeforeMount, ref } from "vue";
+import Swal from "sweetalert2";
 
 const users = ref([]);
 const userInfo = ref({});
@@ -27,35 +28,72 @@ const getUsers = async () => {
 //Function display user details.
 const getUserId = async (id) => {
   console.log("Get the user detail:" + id);
-  await axios
-    .get(`http://localhost:8082/api/user/detail/${id}`)
-    .then((res) => {
-      console.log(res.data);
-      userInfo.value = res.data;
-    })
-    .catch((err) => {
-      console.error("User not found: ", err);
+  try {
+    const res = await axios.get(`http://localhost:8082/api/user/detail/${id}`, {
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        "Content-Type": "application/json",
+      },
     });
+    userInfo.value = res.data;
+    console.log(res.data);
+  } catch (err) {
+    console.error("Error to get user detail: ", err);
+  }
 };
-
 //Function remove user by user id.
 const removeUser = async (id) => {
-  if (confirm("Confirm to remove this user?") == true) {
+  const result = await Swal.fire({
+    title: "Confirm to remove this user?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes",
+    cancelButtonText: "Cancel",
+  });
+
+  if (result.isConfirmed == true) {
     console.log(id);
-    await axios
-      .delete(`http://localhost:8082/api/user/detail/${id}`)
-      .then((res) => {
-        console.log("Delete success.");
-        getUsers();
-      })
-      .catch((err) => {
-        console.error("User can not remove: ", err);
-      });
+    try {
+      await axios
+        .delete(`http://localhost:8082/api/user/detail/${id}`, {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log("Delete success.");
+          getUsers();
+        })
+        .catch((err) => {
+          console.error("User can not remove: ", err);
+        });
+    } catch (err) {
+      console.error(
+        "User cannot be removed:",
+        err.response ? err.response.data : err.message
+      );
+    }
   }
+};
+
+const userLogout = async () => {
+  await Swal.fire({
+    title: "Warning!",
+    text: "You have been logged out.",
+    icon: "warning",
+    confirmButtonText: "Okay",
+  });
+  localStorage.removeItem("token");
 };
 </script>
 <template>
-  <UserList :userList="users" @getUserId="getUserId" @removeUser="removeUser" />
+  <UserList
+    :userList="users"
+    @getUserId="getUserId"
+    @removeUser="removeUser"
+    @userLogut="userLogout"
+  />
   <UserInfo :userInfo="userInfo" />
 </template>
 <style></style>

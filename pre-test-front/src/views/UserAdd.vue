@@ -2,6 +2,7 @@
 import axios from "axios";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 
 const router = useRouter();
 
@@ -16,7 +17,7 @@ const roles = ref(["admin", "user"]);
 const roleSelect = ref("user");
 const dateOfBirth = ref("");
 
-const unique = ref(false);
+// const unique = ref(false);
 
 //Function insert user data.
 const createUser = async () => {
@@ -24,7 +25,12 @@ const createUser = async () => {
 
   //Password check mathing
   if (password.value !== confirmPassword.value) {
-    alert("Password not match");
+    Swal.fire({
+      title: "Error!",
+      text: "Password does not match.",
+      icon: "error",
+      confirmButtonText: "Okay",
+    });
     password.value = "";
     confirmPassword.value = "";
     return;
@@ -32,17 +38,31 @@ const createUser = async () => {
 
   //If password match, it'll create new user
   try {
-    const res = await axios.post(`http://localhost:8082/api/user/add-user`, {
-      firstName: firstName.value,
-      lastName: lastName.value,
-      userName: userName.value,
-      email: email.value,
-      password: confirmPassword.value,
-      role: roleSelect.value,
-      dateOfBirth: dateOfBirth.value,
-    });
+    const res = await axios.post(
+      `http://localhost:8082/api/user/add-user`,
+      {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        userName: userName.value,
+        email: email.value,
+        password: confirmPassword.value,
+        role: roleSelect.value,
+        dateOfBirth: dateOfBirth.value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     console.log("User created successfully:", res.data);
-    alert("Create user success.");
+    await Swal.fire({
+      title: "Success!",
+      text: "Create user success.",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
     await router.push("/");
   } catch (err) {
     if (err.response) {

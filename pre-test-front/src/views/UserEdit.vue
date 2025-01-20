@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import router from "../router";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const route = useRoute();
 
@@ -18,10 +19,16 @@ const userEdit = ref({
   dateOfBirth: "",
 });
 
+//Function get user details before modify.
 const getUserId = async () => {
   console.log("Get the user detail: " + `${route.params.id}`);
   await axios
-    .get(`http://localhost:8082/api/user/detail/${route.params.id}`)
+    .get(`http://localhost:8082/api/user/detail/${route.params.id}`, {
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        "Content-Type": "application/json",
+      },
+    })
     .then((res) => {
       console.log(res.data);
       userEdit.value = {
@@ -38,23 +45,36 @@ const getUserId = async () => {
     });
 };
 
+//Modify user function.
 const editUser = async () => {
-  await axios
-    .patch(`http://localhost:8082/api/user/detail/${route.params.id}`, {
-      firstName: userEdit.value.firstName,
-      lastName: userEdit.value.lastName,
-      email: userEdit.value.email,
-      role: userEdit.value.role,
-      dateOfBirth: userEdit.value.dateOfBirth,
-    })
-    .then((res) => {
-      console.log("Edit data complete", res);
-      alert("Edit user completed.");
-      router.push("/");
-    })
-    .catch((err) => {
-      console.error(err);
+  try {
+     await axios.patch(
+      `http://localhost:8082/api/user/detail/${route.params.id}`,
+      {
+        firstName: userEdit.value.firstName,
+        lastName: userEdit.value.lastName,
+        email: userEdit.value.email,
+        role: userEdit.value.role,
+        dateOfBirth: userEdit.value.dateOfBirth,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("Edit data complete");
+    await Swal.fire({
+      title: "Success!",
+      text: "Edit user completed.",
+      icon: "success",
+      confirmButtonText: "OK",
     });
+    router.push("/");
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const toggleEdit = () => {

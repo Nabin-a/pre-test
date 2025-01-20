@@ -1,4 +1,6 @@
 <script setup>
+import Swal from "sweetalert2";
+
 defineEmits(["getUserId", "removeUser"]);
 defineProps({
   userList: {
@@ -6,6 +8,17 @@ defineProps({
     require: true,
   },
 });
+
+const userLogout = async () => {
+  await Swal.fire({
+    title: "Warning!",
+    text: "You have been logged out.",
+    icon: "warning",
+    confirmButtonText: "Okay",
+  });
+  localStorage.removeItem("token");
+  location.reload();
+};
 </script>
 <template>
   <div class="container">
@@ -17,6 +30,13 @@ defineProps({
             <i class="bi bi-person-fill-add text-white"></i>
           </button>
         </router-link>
+        &nbsp
+        <router-link to="/login">
+          <button type="button" class="btn btn-primary">login</button>
+        </router-link>
+        <button type="button" class="btn btn-secondary" @click="userLogout">
+          logout
+        </button>
       </div>
       <div class="card-body" v-if="userList.length < 1">
         <h4 class="text-body-secondary">Loading users...</h4>
