@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,8 +29,8 @@ import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserInfoDto;
 import com.example.demo.entities.Roles;
-import com.example.demo.entities.UserPrincipal;
 import com.example.demo.entities.Users;
+import com.example.demo.exception.UserAlreadyExcists;
 import com.example.demo.repositories.UserRepository;
 
 @Service
@@ -47,6 +51,17 @@ public class UserService implements UserDetailsService {
     @Autowired
     private AuthenticationManager authManager;
 
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Users user = userRepo.findByUserName(userName);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
+        List<GrantedAuthority> authorities = Collections.singletonList(authority);
+        return new User(user.getUserName(), user.getPassword(), authorities);
+    }
+
     // Method List All Users.
     public List<UserDto> getAllUser() {
         List<Users> userList = userRepo.findAll();
@@ -62,18 +77,23 @@ public class UserService implements UserDetailsService {
 
     // Method Add User.
     public Users create(AddUserDto newUser) {
-        // If user not input role -> Default set role to user.
-        Users user = modelMapper.map(newUser, Users.class);
-        if (newUser.getRole() != null) {
-            user.setRole(Roles.valueOf(newUser.getRole().toLowerCase()));
-        } else {
-            user.setRole(Roles.user);
-        }
+        Users existUsers = userRepo.findByUserName(null);
+        if (existUsers == null) {
 
-        user.setPassword(encoder.encode(newUser.getPassword()));
-        Users saveUser = userRepo.saveAndFlush(user);
-        saveUser.setPassword("**********");
-        return saveUser;
+            Users user = modelMapper.map(newUser, Users.class);
+            // If user not input role -> Default set role to user.
+            if (newUser.getRole() != null) {
+                user.setRole(Roles.valueOf(newUser.getRole().toUpperCase()));
+            } else {
+                user.setRole(Roles.USER);
+            }
+
+            user.setPassword(encoder.encode(newUser.getPassword()));
+            Users saveUser = userRepo.saveAndFlush(user);
+            saveUser.setPassword("**********");
+            return saveUser;
+        } else
+            throw new UserAlreadyExcists("User already exist!");
     }
 
     // Method Edit User.
@@ -114,16 +134,6 @@ public class UserService implements UserDetailsService {
     // Map list method
     public <S, T> List<T> mapList(List<S> source, Class<T> targetClass, ModelMapper modelMapper) {
         return source.stream().map(entity -> modelMapper.map(entity, targetClass)).collect(Collectors.toList());
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Users user = userRepo.findByUserName(userName);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        return new UserPrincipal(user);
     }
 
     // Method login

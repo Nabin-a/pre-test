@@ -9,6 +9,8 @@ import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserInfoDto;
 import com.example.demo.entities.Users;
+import com.example.demo.exception.ErrorResponse;
+import com.example.demo.exception.UserAlreadyExcists;
 import com.example.demo.service.UserService;
 
 import jakarta.validation.Valid;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +37,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     // GET Method: List all users information
     @GetMapping("/list")
     public List<UserDto> listAllUser() {
@@ -46,30 +48,35 @@ public class UserController {
     public UserInfoDto detail(@PathVariable int id) {
         return userService.getUserById(id);
     }
-    
 
-    //POST Method: Create new user
+    // POST Method: Create new user
     @PostMapping("/add-user")
     @ResponseStatus(HttpStatus.CREATED)
     public Users create(@Valid @RequestBody AddUserDto newUser) {
         return userService.create(newUser);
     }
 
-    //PATCH Method: Edit some of field user by id
+    // PATCH Method: Edit some of field user by id
     @PatchMapping("/detail/{id}")
-    public UserInfoDto edit(@PathVariable int id, @Valid @RequestBody Map<Object, Object> fields){
+    public UserInfoDto edit(@PathVariable int id, @Valid @RequestBody Map<Object, Object> fields) {
         return userService.editUser(id, fields);
     }
-    
-    //DELETE Method: Remove user by id
+
+    // DELETE Method: Remove user by id
     @DeleteMapping("/detail/{id}")
     public void removeUser(@PathVariable Integer id) {
         userService.removeUser(id);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginDto login) {        
+    public String login(@RequestBody LoginDto login) {
         return userService.verify(login);
     }
-    
+
+    @ExceptionHandler(value = UserAlreadyExcists.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleCustomerAlreadyExistsException(UserAlreadyExcists ex) {
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
+    }
+
 }
