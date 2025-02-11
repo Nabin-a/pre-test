@@ -10,11 +10,13 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,7 +32,8 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserInfoDto;
 import com.example.demo.entities.Roles;
 import com.example.demo.entities.Users;
-import com.example.demo.exception.UserAlreadyExcists;
+import com.example.demo.exception.UserAlreadyExists;
+import com.example.demo.exception.UserNotFoundExceptions;
 import com.example.demo.repositories.UserRepository;
 
 @Service
@@ -71,13 +74,23 @@ public class UserService implements UserDetailsService {
     public UserInfoDto getUserById(Integer id) {
         Users users = userRepo.findById(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User ID " + id + " Does not exist"));
+                        () -> new UserNotFoundExceptions("User not found ID: " + id));
         return modelMapper.map(users, UserInfoDto.class);
     }
 
     // Method Add User.
     public Users create(AddUserDto newUser) {
-        Users existUsers = userRepo.findByUserName(null);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserRole = authentication.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .findFirst()
+                .orElse(null);
+
+        if ("ROLE_USER".equals(currentUserRole)) {
+            throw new AccessDeniedException("You do not have permission to create users.");
+        }
+
+        Users existUsers = userRepo.findByUserName(newUser.getUserName());
         if (existUsers == null) {
 
             Users user = modelMapper.map(newUser, Users.class);
@@ -93,7 +106,7 @@ public class UserService implements UserDetailsService {
             saveUser.setPassword("**********");
             return saveUser;
         } else
-            throw new UserAlreadyExcists("User already exist!");
+            throw new UserAlreadyExists("User already exist.");
     }
 
     // Method Edit User.

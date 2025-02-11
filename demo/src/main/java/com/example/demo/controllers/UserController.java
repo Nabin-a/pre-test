@@ -9,8 +9,6 @@ import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserInfoDto;
 import com.example.demo.entities.Users;
-import com.example.demo.exception.ErrorResponse;
-import com.example.demo.exception.UserAlreadyExcists;
 import com.example.demo.service.UserService;
 
 import jakarta.validation.Valid;
@@ -22,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,7 +61,7 @@ public class UserController {
 
     // DELETE Method: Remove user by id
     @DeleteMapping("/detail/{id}")
-    public void removeUser(@PathVariable Integer id) {
+    public void removeUser(@Valid @PathVariable Integer id) {
         userService.removeUser(id);
     }
 
@@ -73,10 +70,5 @@ public class UserController {
         return userService.verify(login);
     }
 
-    @ExceptionHandler(value = UserAlreadyExcists.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleCustomerAlreadyExistsException(UserAlreadyExcists ex) {
-        return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
-    }
 
 }

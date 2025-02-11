@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,8 +9,9 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
 public class DemoApplication {
-
+	private static final Logger logging = LoggerFactory.getLogger(DemoApplication.class);
 	public static void main(String[] args) {
+		logging.info("Performing action...");
 		Dotenv dotenv = Dotenv.configure()
 				.directory("demo\\.env") 
 				.load();
